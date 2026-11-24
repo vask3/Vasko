@@ -1,0 +1,100 @@
+<style>
+  body { margin: 0; background: #111; color: #fff; font-family: sans-serif; overflow: hidden; user-select: none; }
+  #game { position: relative; width: 100vw; height: 100vh; background-size: cover; background-position: center; display: flex; flex-direction: column; justify-content: flex-end; }
+  #sprite { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); max-height: 85vh; pointer-events: none; }
+  #choices { position: absolute; top: 30%; left: 50%; transform: translate(-50%, -30%); display: flex; flex-direction: column; gap: 10px; z-index: 10; }
+  .choice-btn { background: rgba(20, 20, 30, 0.9); color: #fff; border: 2px solid #555; padding: 12px 24px; font-size: 18px; cursor: pointer; border-radius: 6px; }
+  .choice-btn:hover { background: #334; border-color: #88f; }
+  #box { background: rgba(15, 15, 20, 0.85); border-top: 2px solid #444; padding: 20px 30px; min-height: 120px; z-index: 5; cursor: pointer; }
+  #name { font-weight: bold; color: #7aa2f7; font-size: 20px; margin-bottom: 8px; }
+  #text { font-size: 18px; line-height: 1.4; }
+</style>
+
+<div id="game">
+  <img id="sprite" src="" style="display:none;">
+  <div id="choices"></div>
+  <div id="box">
+    <div id="name"></div>
+    <div id="text">Зареждане...</div>
+  </div>
+</div>
+
+<script>
+let lines = [];
+let labels = {};
+let index = 0;
+let waitingForChoice = false;
+
+fetch('script.txt')
+  .then(r => r.text())
+  .then(data => {
+    lines = data.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#'));
+    lines.forEach((line, i) => {
+      if (line.startsWith('label ') && line.endsWith(':')) {
+        labels[line.slice(6, -1).trim()] = i;
+      }
+    });
+    next();
+  });
+
+function next() {
+  if (waitingForChoice || index >= lines.length) return;
+  let line = lines[index++];
+
+  if (line.startsWith('label ')) {
+    next();
+  } else if (line.startsWith('scene ')) {
+    document.getElementById('game').style.backgroundImage = `url('images/${line.slice(6).trim()}')`;
+    next();
+  } else if (line.startsWith('show ')) {
+    let sp = document.getElementById('sprite');
+    sp.src = `images/${line.slice(5).trim()}`;
+    sp.style.display = 'block';
+    next();
+  } else if (line.startsWith('hide')) {
+    document.getElementById('sprite').style.display = 'none';
+    next();
+  } else if (line.startsWith('jump ')) {
+    let target = line.slice(5).trim();
+    if (labels[target] !== undefined) index = labels[target];
+    next();
+  } else if (line === 'menu:') {
+    showMenu();
+  } else {
+    renderDialogue(line);
+  }
+}
+
+function renderDialogue(line) {
+  let match = line.match(/^"([^"]+)"\s+"([^"]+)"$/);
+  if (match) {
+    document.getElementById('name').textContent = match[1];
+    document.getElementById('text').textContent = match[2];
+  } else {
+    document.getElementById('name').textContent = '';
+    document.getElementById('text').textContent = line.replace(/^"|"$/g, '');
+  }
+}
+
+function showMenu() {
+  waitingForChoice = true;
+  let container = document.getElementById('choices');
+  container.innerHTML = '';
+
+  while (index < lines.length && lines[index].includes('->')) {
+    let [label, target] = lines[index++].split('->').map(s => s.trim());
+    let btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = label.replace(/^"|"$/g, '');
+    btn.onclick = () => {
+      container.innerHTML = '';
+      waitingForChoice = false;
+      if (labels[target] !== undefined) index = labels[target];
+      next();
+    };
+    container.appendChild(btn);
+  }
+}
+
+document.getElementById('box').onclick = next;
+</script>

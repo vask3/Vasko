@@ -1,0 +1,14 @@
+label start:
+scene bg_room.jpg
+show vasko.happy.png
+"Hello,are you ready to start my movie game?"
+"I" "Are you ready to start?"
+
+menu:
+"Yes, continue!" -> go_yes
+"No, I will wait." -> go_no
+
+label go_yes:
+
+scene cinema_hall.jpg
+"The story begins on a sunny day...."
