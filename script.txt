@@ -1,6 +1,6 @@
 label start:
 scene bg_room.jpg
-show vasko.happy.png
+show vasko_happy.png
 "Hello,are you ready to start my movie game?"
 "I" "Are you ready to start?"
 
