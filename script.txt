@@ -12,3 +12,15 @@ label go_yes:
 scene cinema_hall.jpg
 pic movie_poster.jpg
 "Vasko" "The name of the movie is My Big Fat Greek Wedding."
+hidepic
+pic hero.jpg
+"Vasko" "Its about Toula Portokalos, a 30-year-old Greek-American woman who breaks free from her traditional expectations and falls in love with Ian Miller, a non-Greek teacher."
+hidepic
+hide
+show2 vasko_here.png
+pic wed.jpg
+"Vasko" "Toula Portokalos, a 30-year-old Greek-American woman who breaks free from her traditional expectations and falls in love with Ian Miller, a non-Greek teacher. As they plan their wedding, Toula struggles to get her loud, fiercely proud Greek family to accept him."
+hidepic
+hide2
+show3 vasko_bye.png
+"Vasko" "Bye!"
