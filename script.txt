@@ -24,3 +24,8 @@ hidepic
 hide2
 show3 vasko_bye.png
 "Vasko" "Bye!"
+
+label go_no:
+hide
+show3 vasko_bye.png
+"Vasko" "Okay, no problem! Come back whenever you're ready."
