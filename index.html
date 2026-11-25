@@ -1,7 +1,8 @@
 <style>
   body { margin: 0; background: #111; color: #fff; font-family: sans-serif; overflow: hidden; user-select: none; }
   #game { position: relative; width: 100vw; height: 100vh; background-size: cover; background-position: center; display: flex; flex-direction: column; justify-content: flex-end; }
-  #sprite { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); max-height: 85vh; pointer-events: none; }
+  #sprite { position: absolute; bottom: 0; left: 32%; transform: translateX(-50%); max-height: 85vh; pointer-events: none; }
+  #popup-pic { position: absolute; top: 18%; right: 12%; max-width: 320px; max-height: 260px; border: 3px solid #fff; border-radius: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.7); display: none; z-index: 4; }
   #choices { position: absolute; top: 30%; left: 50%; transform: translate(-50%, -30%); display: flex; flex-direction: column; gap: 10px; z-index: 10; }
   .choice-btn { background: rgba(20, 20, 30, 0.9); color: #fff; border: 2px solid #555; padding: 12px 24px; font-size: 18px; cursor: pointer; border-radius: 6px; }
   .choice-btn:hover { background: #334; border-color: #88f; }
@@ -12,6 +13,7 @@
 
 <div id="game">
   <img id="sprite" src="" style="display:none;">
+  <img id="popup-pic" src="">
   <div id="choices"></div>
   <div id="box">
     <div id="name"></div>
@@ -51,8 +53,16 @@ function next() {
     sp.src = `images/${line.slice(5).trim()}`;
     sp.style.display = 'block';
     next();
+  } else if (line.startsWith('hidepic')) {
+    document.getElementById('popup-pic').style.display = 'none';
+    next();
   } else if (line.startsWith('hide')) {
     document.getElementById('sprite').style.display = 'none';
+    next();
+  } else if (line.startsWith('pic ')) {
+    let pic = document.getElementById('popup-pic');
+    pic.src = `images/${line.slice(4).trim()}`;
+    pic.style.display = 'block';
     next();
   } else if (line.startsWith('jump ')) {
     let target = line.slice(5).trim();

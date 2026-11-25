@@ -2,7 +2,6 @@ label start:
 scene bg_room.jpg
 show vasko_happy.png
 "Hello,are you ready to start my movie game?"
-"I" "Are you ready to start?"
 
 menu:
 "Yes, continue!" -> go_yes
@@ -11,4 +10,5 @@ menu:
 label go_yes:
 
 scene cinema_hall.jpg
-"The story begins on a sunny day...."
+pic movie_poster.jpg
+"Vasko" "The name of the movie is My Big Fat Greek Wedding."
